@@ -1,0 +1,28 @@
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URI: "mysql+pymysql://root:password@database:3306/yt_thumbnail_analyzer"
+      GROQ_API_KEY: "add_your_api_key_here"
+    ports:
+      - 8080:8080
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_URL: "http://localhost:8080"
+    ports:
+      - 5173:5173
+
+
